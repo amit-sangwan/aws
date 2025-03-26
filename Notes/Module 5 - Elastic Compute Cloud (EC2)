@@ -161,6 +161,7 @@ Issues you can face:
     - Permission denied (publickey,gssapi-keyex,gssapi-with-mic)
       You are using the wrong security key or not using a security key.
 
+
 ------------------------------------------------------------------------------------------------------------------------
 EC2 Instance Roles:
     Note: aws iam list-users: list configures users
