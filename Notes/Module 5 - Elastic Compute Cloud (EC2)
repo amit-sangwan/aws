@@ -160,3 +160,119 @@ Some Ports to know:
 Issues you can face:
     - Permission denied (publickey,gssapi-keyex,gssapi-with-mic)
       You are using the wrong security key or not using a security key.
+
+------------------------------------------------------------------------------------------------------------------------
+EC2 Instance Roles:
+    Note: aws iam list-users: list configures users
+
+Always use IAM roles to give user permissions.
+
+EC2 : Action > Security > IAM Role > Enter IAM Role
+IAM > Attach the policy > Apply the IAM role to EC2 Instance
+
+------------------------------------------------------------------------------------------------------------------------
+
+EC2 instance purchasing Option:
+1.) On-Demand Instance: short workload , predictable pricing , pay by second.
+    - Linux or windoes = billing per seconf , after first minute.
+    - All other OS - billing per hour
+
+    - Has the highest cost but no upfront payment
+    - No long-term commitment
+    - Recommended for short term and un-interrupted workloads, where you can not predict how the application will behave.
+
+2.) Reserved ( 1 & 3 years )
+    - Reserved Instances: long workloads
+    - COnvertible Reserved Instances: long workloads with flexible instances
+    - Uptp 72% discount compared to On -demand
+    - No Upfront , partial Upfront , all upfront
+    - reserved instance scope - regional or zonal
+    - you can bay and sale on reserved instance marketplace
+
+3.) Savings Plan ( 1 & 3 years ): commitment to an amount of usage, long workload
+    - Get discount on long-term usage
+    - Commit to a certain type of usage ( $10/hour )
+
+
+4.) Spot Instances: short workloads , cheap , can lose instances ( less reliable )
+    - can get a discount of up to 90% to on-demand
+    - instances can lose at any point of time if your max price is less than the current spot price
+    - the MOST cost-efficient instances in AWS
+    - Usefull for workloads that are resilient to failures:
+        - Batch jobs
+        - Data analysis
+        - Image Processing
+        - Any distributed workload
+        - Workloads with a felxible start and end time.
+
+        - Not suitable for critical jobs or databases
+
+5.) Dedicated Hosts: book an entire physical server , control instance placement.
+    - A physical server with EC2 instance capacity fully dedicated to your use.
+    - Purchase Options:
+        - On-demand - pay per second for active dedicated host
+        - Reserved - 1 or 3 years
+     The most expensive option
+     -Usefull for software that have complicated licensing model or have strong regulatory or compliance needs.
+
+6.) De dicated Instance: No other customers will share your hardware.
+    - Instances run on hardware thats dedicated to you.
+    - May share hardware with other instances in the same account
+    - No control over instance placement
+    ( can move hardware after stop/start )
+
+7.) EC2 Capacity Reservations: Reserve capacity in a specific AZ for any duration.
+    - Reserve On-demand instances capacity in a specific AZ for any duration
+    - You always have access to EC2 capacity when you need it
+    - No time commitment ( create / cancel anytime ), no billing discount.
+    - Combine with regional reserved instances and saving plans to benefit from billing discount
+    - You are charged at On-demand rate whether you run instance or not.
+
+    Suitable for short - term , un interrupted workloads that needs to be in a specific AZ.
+
+ Which purachasing options are right for me ??
+    One Demand : coming and staying in resort whenever we like , we pay the full price.
+    Reserved: like planning ahead and if we plan to stay for long time ,we may get a good discount.
+    Saving Plan: pay a certain amount per hour for certain period and stay in any rooom type
+    Spot instance: The hotel allows people to bid for the empty rooms and the highest bidder keeps the rooms,you can be kicked out anytime
+    Dedicted hosts: book entire resort
+    Capacity Reservation: you can book a room for a period with full price even you dont stay in it.
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+AWS charges for IPv4 addresses
+- From Feb 2024 all public IPv4 of account cost 0.005$ per hou
+- For new accounts in AWS, you have a free tier for EC2 service: 750 hours of public IPv4 per monthj for the first 12 months.
+- For all other services there is no fre tier.
+
+EC2 Instaces : Free until 750 hours/months of usage
+Load balance : One public IPv4 per AZ , no free tier.
+RDS Database: One public IPv4 , No free tier
+
+------------------------------------------------------------------------------------------------------------------------
+SHARED RESPONSIBILTY:
+
+AWS:
+- Insfrastructure ( global network security )
+- Isolation on physical hosts
+- Replacing faulty hardware
+- Compliance validation
+
+User:
+- Security groups rules
+- OS patches and updates
+- SOftware and utilities installed on EC2 instances
+- IAM roles assigned to EC2 AND IAM USER ACCESS MANAGEMENT
+- Data security on your instance.
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+Summary:
+- EC2 instance: AMI ( OS ) + Instance Size ( CPU + RAM )  + Storage + Security Groups + EC2 User Data
+- Security groups: Firewall attached to the EC2 instances
+- User data: scripts launced at the first start of an instance
+- ssh: start a terminal into our ec2 instances ( port 22 )
+- EC2 Instance role: Link to IAM roles
+- Purchasing Options: On-demand , Spot , Reserved ( Standard + convertible ) , Dedicated hosts, dedicated instance
