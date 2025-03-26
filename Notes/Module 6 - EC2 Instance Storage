@@ -1,1 +1,160 @@
-//
+---------------------------- EC2 Instance Storage Section ------------------------------------------------------
+
+Whats an EBS Volume?
+    - An EBS ( Elastic Block Store ) volume is a network drive you can attach to your instance while they run.
+    - It allows your instance to persist data, even after termination.
+    - They can only be mounted to one instance at a time ( at the CCP level )
+    - They are bound to a specific availability zone.
+
+    Analogy: Think of them as a " Network USB Stick"
+
+Note: Free tier : 30 GB of free EBS storage of type general puspose (SSD) or Magnetic per month
+
+------------------------------------------------------------------------------------------------------------------------
+EBS Volume:
+    - Its a network drive ( Not a physical drive )
+        - It uses the network to communicate the instance , which means there might be a bit of latency.
+        - It can be detached from an EC2 instance and attachde to another one quickly.
+    - It locked to AZ ( Availability Zone )
+        - An EBS Volume in us-east-la cannot be attached to us-east-lb
+        - To move a volume across ,you first need to snapshot it.
+    - Have a provisioned capacity ( size in GBs and IOPS )
+        - You get billed for all the provisioned capacity.
+
+------------------------------------------------------------------------------------------------------------------------
+   Example:
+
+   US-EAST-1A
+   EBS -----> InstanceA
+   EBS -----> Unattached
+
+   US-East-1B
+   EBS1 ----> Instance B
+   EBS2 ------> Instance B ( different EBS attached to same instance )
+------------------------------------------------------------------------------------------------------------------------
+EBS -Delete on Termination attribute
+    - Controls the EBS behavior when an EC2 instance terminates.
+        - By default , the root EBS volume is deleted ( attribute enabled )
+        - By default , any other volume attached is not deleted ( attribute disabled )
+    - This can be controlled by AWS console
+    - Use case: preserve root volume when instance is terminated.
+
+------------------------------------------------------------------------------------------------------------------------
+EBS Snapshots
+    - Make a backup (snapshot) of your ebs volume at a point in time.
+    - Not necessary to detach volume to do snapshot , but recommended.
+    - Can copy snapshot across AZ or region
+
+        AZ1 ( EBS ) ----> Snap Shot -----> Move to AZ2 ( EBS )
+
+EBS Snapshots Features
+    - EBS Snapshot Archive
+        -Move snapshot to an "archive tier" that is 75% cheaper
+        -Takes within 24-72 hours for restoring the archive
+    - Recycle Bin For EBS Snapshots
+        - Setup rules to retain deleted snapshots so you can recover them after an accidental deletion.
+        - Specify retention ( from 1 day to 1 year )
+
+------------------------------------------------------------------------------------------------------------------------
+-AMI : Amazon Machine Imag
+-AMI are a cutomization of an EC2 instance:
+    - Yoy add your own software,config , os , monitoring etc.
+    - Faster boot / config time because all your software is pre-packed.
+-AMI are build for a specific region ( can be copied across regions )
+-You can launch EC2 instances from :
+    - A public AMI: AWS provided
+    - Your own AMI: You make and maintain them yourself
+    - An AWS marketplace AMI: an AMI Someone else made ( and potentially sells )
+
+ ------------------------------------------------------------------------------------------------------------------------
+AMI Process ( From EC2 Instace )
+    - Start an EC2 instance and customize it .
+    - Stop the instance ( for data integrity )
+    - Build an AMI - this will also create EBS snapshots ( Instance > Actions > Image and templates > Create Image )
+    - Launch instances from other AMIs
+
+    EC2 - > Custom AMI -> EC2
+
+ ------------------------------------------------------------------------------------------------------------------------
+EC2 Image Builder:
+ - Used to automate the creation of VMs or container images
+    - AUtomate the creation , maintain , validate and test EC2 AMIs
+ - It is a regional service
+ - Can be run on a schedule ( weekly, etc etc )
+ - Free service ( Only pay for the underlying resources )
+ EC2 Image Builder -- crate--> Builder EC2 Instance ---create --> New AMI ---> Test EC2 instace (if AMI is working or not)
+
+
+------------------------------------------------------------------------------------------------------------------------
+ECE Instance Store
+    - EBS volumes are network drive with good but limited performance.
+    - If you need a high performance hadware disk , use EC2 instance store
+
+    - Better I/O performance
+    -EC2 instance store lose their storage if they are stopped
+    - Good for buffer / cache /scratch data / temporary content.
+    - Risk of data loss if hardware fails
+    - Backups and replication are your responsibilty.
+
+------------------------------------------------------------------------------------------------------------------------
+EFS : Elastic File System
+    - Managed NFS ( Network File System ) that can be mounted on 100s of EC2
+    - EFS works with Lunux EC2 instances in multi AZ
+    - Highly available ,scalable , expensive , pay per use , no capacity planning.
+
+------------------------------------------------------------------------------------------------------------------------
+EFS Infrequent Access ( EFS-IA)
+    - Storage class that is cost optimized for files not accessed every day.
+    - Upto 92% lower cost compared to EFS Standard
+    - EFS will automatically move your file to EFS-IA based on the last time they were accessed/
+    - Enable EFS-IS with a lifecycle policy.
+    - Example: move files that are not accessed from last 60 days
+    - Transparent to the applications accessing EFS.
+
+------------------------------------------------------------------------------------------------------------------------
+Shared Responsibilty:
+AWS:
+    -Infrastruction
+    -Replication for data for EBS volumes and EFS drives
+    -Replacing faulty hardware
+    -Ensuring there employees cannot access your data.
+
+User:
+    -Setting up back up and snapshot procedures
+    -Setting up data encryption
+    -Responsibility of any data on drives
+    -Understanding the risk of using EC2 Instance Store.
+
+------------------------------------------------------------------------------------------------------------------------
+Amazon FSx - Overview
+- Launch 3rd party high performance file system on AWS
+Fully managed service:
+1.) FSx for Lustre:
+        - A fully managed , high performance , scalable file storage for High performance computing
+        - Linux + Cluster = Lustre
+        - ML , Analytics , video processing etc
+2.) FSx for windows file server
+        - Fully managed , highly reliable and scalable windows native shared file system.
+        - Build on Windows File Server
+        - Supports SMB protocol and Windows NTFS
+        - Integrated with microsoft active directory.
+        - can be accessed from aws or your on premises infrastructure.
+3.) FSx forNetApp ONTAP
+
+------------------------------------------------------------------------------------------------------------------------
+
+Summary:
+1) EBS Volumes:
+    - Network drives attached to one EC2 instance at a time.
+    - Mapped to an AZ
+    - Can use EBS Snapshots for backups / transferring EBS volumes across AZ
+
+2.) AMI: Create ready to use EC2 instances with out customizations.
+3.) EC2 Image Builder: Automatically builds ,test and distribute AMIs.
+4.) EC2 Instance Store:
+    -   High performance hardware disk attached to our EC2 instance
+    -   Lost if our instance is stopped / terminated.
+5.) EFS: Network file system , can  be attached to 100s of EC2s in a region.
+6.) EFS-IA: Cost optimized storage class for infrequent accessed files.
+7.) FSx for windows: Network file system for windows OS
+8.) FSx for lustre: High performance computing linux file system.

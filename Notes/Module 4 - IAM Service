@@ -123,7 +123,7 @@ Install AWS CLI : normal steps : google , download and install.
 ------------------------------------------------------------------------------------------------------------------------
 IAM Roles For Services:
     - Some AWS service will need to perform actions on your behalf.
-    - To do so , we will assign permissions to AWS services with IAM Roles.
+    - To do so , we will assign permissions to AWS services with IAM Roles.( QA access Role , QA AWS ROle etc )
     - Common roles: EC2 Instance ROles , Lambda Function Roles , ROles for cloudFormation.
 
     EC2 Instance ( IAM ROle to access aws )
