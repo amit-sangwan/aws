@@ -1,0 +1,124 @@
+------------------------------------------------------------------------------------------------------------------------
+Scalability and High Availability:
+Scalability:
+            Means that an application / system can handle greater loads by adapting.
+            Two kinds of scalability:
+                - Vertical Scalability
+                - Horizontal Scalability ( elasticity )
+
+            Note: Scalability is linked but different to high availability.
+
+- Vertical Scalability:
+    - Here we increase the size of the instance.
+      Example: t2.micro --> t2.large
+    - Very common for non-distributed systems , such as database.
+
+- Horizontal Scalability:
+    - Here we increase the number of instances/systems of your application.
+    - Horizontal scaling implies to distributed systems.
+    - This is very common for web applications/modern applications.
+    - Easy to horizontally scale thanks to the cloud offering such as Amazon EC2.
+    Example:
+    Increase the number of instance: Scale-out
+    Decrease the number of instance: Scale-In
+
+        Uses:
+        - AutoScaling Groups
+        - Load Balancers
+
+- High Availability:
+    - Goes hand in hand with horizontal scaling.
+    - Running application/system in at least 2 availability zones.
+    - The goal of it is to survive the lose of data centres.
+
+------------------------------------------------------------------------------------------------------------------------
+# Scalability Vs Elasticity Vs Agility
+
+Scalability: Ability to accommodate a larger load by making hardware stronger ( Scale up )  or by adding nodes ( scale out )
+Elasticity: Once a system is scalable , elasticity means that there will be some auto-scaling so that the system can scale
+            based on the load. This is cloud friendly: pay per use , match demand , optimize costs.
+Agility: ( Not related to scalability - distractor ) new IT resources are only a click away, which means that you
+           reduce the time to make those resources available to your developers from weeks to just minutes.
+
+------------------------------------------------------------------------------------------------------------------------
+
+What is load balancing?
+
+- Load balancers are servers that forward internet traffic to multiple servers (EC2 Instances ) downstream .
+                 --> Instance 0
+    User ---> LB --> Instance 1
+                 --> Instance 2
+
+- Spread load across multiple downstream instances.
+- Expose a single point of access ( DNS ) to your application.
+- Seamlessly handle failures of downstream instances.
+- Do regular health checks to your instances.
+- Provide SSL termination (HTTPS) for your websites.
+- High availability across zones.
+
+------------------------------------------------------------------------------------------------------------------------
+
+Why use an Elastic Load Balancers?
+
+- An ELB ( Elastic Load Balancer ) is a managed load balancer
+    - AWS guarantees that it will be working.
+    - AWS takes care of upgrades, maintenance,high availability.
+    -AWS provides only a few configuration knobs.
+
+- It costs less to setup your own load balancer but it will be a lot more effort on your end ( maintenance , integration )
+
+- Four kind of load balancers offered by AWS:
+    1.) Application Load Balancer ( ALB ) : HTTP / HTTPS / gRPC protocols- Layer 7  , static DNS ( URL )
+    2.) Network Load Balancer ( NLB ) : Ultra high performance , allows for TCP and UDP protocol- Layer 4 , static IP through elastic IP
+    3.) Gateway Load Balancer ( GWLB ): Layer 3 , GENEVE Protocol , route traffic to firewalls that you manage on EC2 instances
+        ( route through 3rd part security virtual appliances )
+    4.) Classic Load Balancer ( CLB ): retired , used to work on Layer 4 and 7
+
+    User --> DNS --> Load Balancer --> Target Group --> EC2 instances ( Distributed hits )
+
+------------------------------------------------------------------------------------------------------------------------
+# What is an Auto Scaling Group
+- The goal is to :
+        - Scale out to match the increased load
+        - Scale in to match the decreased load
+        - Ensure we have minimum , max number of machines running.
+        - Automatically register new instance to a load balancer
+        - Replace unhealthy instance
+        - Cost saving , as running on optimum capacity.
+
+ Min Size: minimum number of machines
+ Max Size: maximum number of machines
+ Desired Size: desired number of machines
+
+Notes: It works hand in hand with load balancers.
+
+Web traffic - > Load Balancer --> Auto Scaling group instances
+
+------------------------------------------------------------------------------------------------------------------------
+Auto Scaling Strategies:
+
+    1.) Manual Scaling:  Update the size of an ASG manually.
+    2.) Dynamic Scaling: Respond to changing demand.
+        - Simple / Step Scaling
+            - When cloud watch alarm is triggered ( CPU  > 70% ) , then add 2 units.
+            - When cloud watch alarm is triggered ( CPU < 30 ) , then remove 2 units.
+        - Target Tracking Scaling:
+            -Example: To keep average cpu to stay around 60%
+        - Scheduled Scaling:
+            - Anticipate a scaling based on known usage pattern.
+                Example: increase the min capacity to 10 at 5 PM on fridays.
+    3.) Predictive Scaling: Based on ml algo to predict based on past traffic , helpful when u have time based patterns.
+
+------------------------------------------------------------------------------------------------------------------------
+Summary:
+
+1.) High Availability vs Scalability ( Vertical and horizontal ) vs Elasticity vs Agility in the cloud
+2.) ELB ( Elastic Load Balancers )
+    - Distributes traffic across backend EC2 instances , can be multi AZ.
+    - Supports health checks.
+    - 4 types: Classic , network load balancer , application load balancer ,gateway load balancers.
+3.) Auto Scaling Groups:
+    - Implements Elasticity for your application , across multiple AZ.
+    - Scale EC2 instances based on the demand on your system, replace unhealthy.
+    - Integrated with the ELB.
+
